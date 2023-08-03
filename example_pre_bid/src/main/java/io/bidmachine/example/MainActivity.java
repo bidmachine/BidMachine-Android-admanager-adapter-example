@@ -717,13 +717,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onAdShown(@NonNull BannerView bannerView) {
-            Log.d(TAG, "BidMachineBannerListener - onAdShown");
+        public void onAdImpression(@NonNull BannerView bannerView) {
+            Log.d(TAG, "BidMachineBannerListener - onAdImpression");
         }
 
         @Override
-        public void onAdImpression(@NonNull BannerView bannerView) {
-            Log.d(TAG, "BidMachineBannerListener - onAdImpression");
+        public void onAdShowFailed(@NonNull BannerView bannerView, @NonNull BMError bmError) {
+            Log.d(TAG,
+                  String.format("BidMachineBannerListener - onAdShowFailed with message: %s (%s)",
+                                bmError.getCode(),
+                                bmError.getMessage()));
         }
 
         @Override
@@ -854,13 +857,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onAdShown(@NonNull BannerView bannerView) {
-            Log.d(TAG, "BidMachineMrecListener - onAdShown");
+        public void onAdImpression(@NonNull BannerView bannerView) {
+            Log.d(TAG, "BidMachineMrecListener - onAdImpression");
         }
 
         @Override
-        public void onAdImpression(@NonNull BannerView bannerView) {
-            Log.d(TAG, "BidMachineMrecListener - onAdImpression");
+        public void onAdShowFailed(@NonNull BannerView bannerView, @NonNull BMError bmError) {
+            Log.d(TAG,
+                  String.format("BidMachineMrecListener - onAdShowFailed with message: %s (%s)",
+                                bmError.getCode(),
+                                bmError.getMessage()));
         }
 
         @Override
@@ -973,11 +979,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this,
                            "BidMachineInterstitialFailedToLoad",
                            Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onAdShown(@NonNull InterstitialAd interstitialAd) {
-            Log.d(TAG, "BidMachineInterstitialListener - onAdShown");
         }
 
         @Override
@@ -1103,11 +1104,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this,
                            "BidMachineRewardedFailedToLoad",
                            Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onAdShown(@NonNull io.bidmachine.rewarded.RewardedAd rewardedAd) {
-            Log.d(TAG, "BidMachineRewardedListener - onAdShown");
         }
 
         @Override

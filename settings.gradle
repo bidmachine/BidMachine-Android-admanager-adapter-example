@@ -1,2 +1,16 @@
-include ':example_pre_bid'
-include ':example_pre_bid_wrapper'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+rootProject.name = "BidMachine-Android-admanager-adapter-example"
+
+include ":example_pre_bid",
+        ":example_pre_bid_wrapper"

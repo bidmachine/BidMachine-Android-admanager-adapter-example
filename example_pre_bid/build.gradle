@@ -1,12 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
+    namespace "io.bidmachine.example"
+
+    compileSdk 33
 
     defaultConfig {
         applicationId "io.bidmachine.example"
-        minSdkVersion 19
-        targetSdkVersion 31
+        minSdk 19
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
