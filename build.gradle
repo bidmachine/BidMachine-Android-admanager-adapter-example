@@ -4,15 +4,15 @@ plugins {
 }
 
 ext {
-    admanager_version = "22.2.0"
-    bidmachine_version = "2.3.2"
-    admanager_adapter_version = "$bidmachine_version.8"
+    admanager_version = "22.3.0"
+    bidmachine_version = "2.3.3"
+    admanager_adapter_version = "$bidmachine_version.9"
     bidmachine_adcolony_version = "$bidmachine_version.11"
     bidmachine_amazon_version = "$bidmachine_version.12"
     bidmachine_criteo_version = "$bidmachine_version.11"
     bidmachine_meta_audience_version = "$bidmachine_version.13"
     bidmachine_mintegral_version = "$bidmachine_version.4"
-    bidmachine_my_target_version = "$bidmachine_version.10"
+    bidmachine_my_target_version = "$bidmachine_version.11"
     bidmachine_pangle_version = "$bidmachine_version.6"
     bidmachine_tapjoy_version = "$bidmachine_version.10"
     bidmachine_vungle_version = "$bidmachine_version.3"
