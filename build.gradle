@@ -4,9 +4,9 @@ plugins {
 }
 
 ext {
-    admanager_version = "22.3.0"
+    admanager_version = "22.4.0"
     bidmachine_version = "2.3.3"
-    admanager_adapter_version = "$bidmachine_version.9"
+    admanager_adapter_version = "$bidmachine_version.10"
     bidmachine_adcolony_version = "$bidmachine_version.11"
     bidmachine_amazon_version = "$bidmachine_version.12"
     bidmachine_criteo_version = "$bidmachine_version.11"
