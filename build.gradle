@@ -5,8 +5,8 @@ plugins {
 
 ext {
     admanager_version = "22.6.0"
-    bidmachine_version = "2.4.2"
-    admanager_adapter_version = "$bidmachine_version.12"
+    bidmachine_version = "2.5.0"
+    admanager_adapter_version = "$bidmachine_version.13"
 }
 
 allprojects {
