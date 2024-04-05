@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 android {
     namespace "io.bidmachine.example"
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "io.bidmachine.example"
         minSdk 19
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
