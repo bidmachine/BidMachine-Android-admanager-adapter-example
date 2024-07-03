@@ -1,12 +1,6 @@
 plugins {
-    id 'com.android.application' version '8.3.1' apply false
-    id 'com.android.library' version '8.3.1' apply false
-}
-
-ext {
-    admanager_version = "22.6.0"
-    bidmachine_version = "2.6.0"
-    admanager_adapter_version = "$bidmachine_version.15"
+    id 'com.android.application' version '8.3.2' apply false
+    id 'com.android.library' version '8.3.2' apply false
 }
 
 allprojects {
