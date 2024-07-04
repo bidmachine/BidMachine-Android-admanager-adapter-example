@@ -1,0 +1,15 @@
+[versions]
+androidx-appcompat = "1.7.0"
+material = "1.12.0"
+support-annotations = "28.0.0"
+gms-plasyServicesAds = "23.2.0"
+bidmachine = "2.7.0"
+bidmachine-adapter-admanager = "2.7.0.16"
+
+[libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+support-annotations = { module = "com.android.support:support-annotations", version.ref = "support-annotations" }
+gms-plasyServicesAds = { module = "com.google.android.gms:play-services-ads", version.ref = "gms-plasyServicesAds" }
+bidmachine-ads = { module = "io.bidmachine:ads", version.ref = "bidmachine" }
+bidmachine-adapter-admanager = { module = "io.bidmachine:ads.adapters.admanager", version.ref = "bidmachine-adapter-admanager" }
