@@ -2,9 +2,9 @@
 androidx-appcompat = "1.7.0"
 material = "1.12.0"
 support-annotations = "28.0.0"
-gms-plasyServicesAds = "23.2.0"
-bidmachine = "2.7.0"
-bidmachine-adapter-admanager = "2.7.0.16"
+gms-plasyServicesAds = "23.3.0"
+bidmachine = "3.0.0"
+bidmachine-adapter-admanager = "3.0.0.17"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
