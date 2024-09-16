@@ -4,12 +4,7 @@
 * [AdManager integration documentation](https://developers.google.com/ad-manager/mobile-ads-sdk/android/quick-start)
 * [BidMachine integration documentation](https://docs.bidmachine.io/docs/in-house-mediation)
 * [BidMachine adapter integration documentation](https://docs.bidmachine.io/docs/google-ad-manager)
-
-## Sample
-* [Banner](example_pre_bid/src/main/java/io/bidmachine/example/MainActivity.java#L129)
-* [MREC](example_pre_bid/src/main/java/io/bidmachine/example/MainActivity.java#L252)
-* [Interstitial](example_pre_bid/src/main/java/io/bidmachine/example/MainActivity.java#L375)
-* [Rewarded](example_pre_bid/src/main/java/io/bidmachine/example/MainActivity.java#L489)
+* [Sample](example_pre_bid/src/main/java/io/bidmachine/example/MainActivity.java)
 
 ## Working with price rounding
 BidMachine supports server-side price rounding.<br>

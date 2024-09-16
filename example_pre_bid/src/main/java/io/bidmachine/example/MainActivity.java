@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
@@ -22,6 +23,8 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
@@ -31,21 +34,26 @@ import io.bidmachine.banner.BannerRequest;
 import io.bidmachine.banner.BannerSize;
 import io.bidmachine.banner.BannerView;
 import io.bidmachine.example.databinding.ActivityMainBinding;
+import io.bidmachine.example.databinding.ItemAdmanagerNativeAdBinding;
+import io.bidmachine.example.databinding.ItemBidmachineNativeAdBinding;
 import io.bidmachine.interstitial.InterstitialAd;
 import io.bidmachine.interstitial.InterstitialRequest;
 import io.bidmachine.mediation.admanager.AMBidMachineUtils;
 import io.bidmachine.models.AuctionResult;
+import io.bidmachine.nativead.NativeRequest;
+import io.bidmachine.nativead.view.NativeAdContentLayout;
 import io.bidmachine.rewarded.RewardedRequest;
 import io.bidmachine.utils.BMError;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String BID_MACHINE_SELLER_ID = "5";
+    private static final String BID_MACHINE_SELLER_ID = "122";
     private static final String BANNER_ID = "YOUR_BANNER_ID";
     private static final String MREC_ID = "YOUR_MREC_ID";
     private static final String INTERSTITIAL_ID = "YOUR_INTERSTITIAL_ID";
     private static final String REWARDED_ID = "YOUR_REWARDED_ID";
+    private static final String NATIVE_ID = "YOUR_NATIVE_ID";
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     private ActivityMainBinding binding;
@@ -66,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     private RewardedAd adManagerRewardedAd;
     private io.bidmachine.rewarded.RewardedAd bidMachineRewardedAd;
 
+    private NativeRequest bidMachineNativeRequest;
+    private AdLoader adManagerNativeAdLoader;
+    private NativeAd adManagerNativeAd;
+    private io.bidmachine.nativead.NativeAd bidMachineNativeAd;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         binding.bShowInterstitial.setOnClickListener(v -> showInterstitial());
         binding.bLoadRewarded.setOnClickListener(v -> loadRewarded());
         binding.bShowRewarded.setOnClickListener(v -> showRewarded());
+        binding.bLoadNative.setOnClickListener(v -> loadNative());
+        binding.bShowNative.setOnClickListener(v -> showNative());
 
         if (BidMachine.isInitialized()) {
             enableButton();
@@ -96,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         destroyMrec();
         destroyInterstitial();
         destroyRewarded();
+        destroyNative();
     }
 
     private void initialize() {
@@ -116,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         binding.bLoadMrec.setEnabled(true);
         binding.bLoadInterstitial.setEnabled(true);
         binding.bLoadRewarded.setEnabled(true);
+        binding.bLoadNative.setEnabled(true);
     }
 
     private void addAdView(View view) {
@@ -216,14 +233,16 @@ public class MainActivity extends AppCompatActivity {
         if (bidMachineBannerView != null) {
             if (bidMachineBannerView.canShow() && bidMachineBannerView.getParent() == null) {
                 addAdView(bidMachineBannerView);
-                return;
+            } else {
+                Log.e(TAG, "Show error - BidMachine banner object can't be shown");
             }
+            return;
         } else if (adManagerBannerAdView != null) {
             addAdView(adManagerBannerAdView);
             return;
         }
 
-        Log.d(TAG, "show error - banner object is null");
+        Log.e(TAG, "Can't show anything - banner objects are null");
     }
 
     /**
@@ -341,14 +360,16 @@ public class MainActivity extends AppCompatActivity {
         if (bidMachineMrecView != null) {
             if (bidMachineMrecView.canShow() && bidMachineMrecView.getParent() == null) {
                 addAdView(bidMachineMrecView);
-                return;
+            } else {
+                Log.e(TAG, "Show error - BidMachine mrec object can't be shown");
             }
+            return;
         } else if (adManagerMrecAdView != null) {
             addAdView(adManagerMrecAdView);
             return;
         }
 
-        Log.d(TAG, "show error - mrec object is null");
+        Log.e(TAG, "Can't show anything - mrec objects are null");
     }
 
     /**
@@ -459,14 +480,16 @@ public class MainActivity extends AppCompatActivity {
         if (bidMachineInterstitialAd != null) {
             if (bidMachineInterstitialAd.canShow()) {
                 bidMachineInterstitialAd.show();
-                return;
+            } else {
+                Log.e(TAG, "Show error - BidMachine interstitial object can't be shown");
             }
+            return;
         } else if (adManagerInterstitialAd != null) {
             adManagerInterstitialAd.show(this);
             return;
         }
 
-        Log.d(TAG, "show error - interstitial object not loaded");
+        Log.e(TAG, "Can't show anything - interstitial objects are null");
     }
 
     /**
@@ -573,14 +596,16 @@ public class MainActivity extends AppCompatActivity {
         if (bidMachineRewardedAd != null) {
             if (bidMachineRewardedAd.canShow()) {
                 bidMachineRewardedAd.show();
-                return;
+            } else {
+                Log.e(TAG, "Show error - BidMachine rewarded object can't be shown");
             }
+            return;
         } else if (adManagerRewardedAd != null) {
             adManagerRewardedAd.show(this, new OnRewardListener());
             return;
         }
 
-        Log.d(TAG, "show error - rewarded object not loaded");
+        Log.e(TAG, "Can't show anything - rewarded objects are null");
     }
 
     /**
@@ -599,6 +624,147 @@ public class MainActivity extends AppCompatActivity {
             bidMachineRewardedRequest = null;
         }
         adManagerRewardedAd = null;
+    }
+
+    /**
+     * Method for load NativeRequest
+     */
+    private void loadNative() {
+        binding.bShowNative.setEnabled(false);
+
+        // Destroy previous ad
+        destroyNative();
+
+        Log.d(TAG, "loadNative");
+
+        // Create new BidMachine request
+        bidMachineNativeRequest = new NativeRequest.Builder()
+                .setListener(new NativeRequestListener())
+                .build();
+
+        // Request an ad from BidMachine without loading it
+        bidMachineNativeRequest.request(this);
+    }
+
+    /**
+     * Method for load AdManager NativeAd
+     */
+    private void loadAdManagerNative(@Nullable NativeRequest nativeRequest) {
+        Log.d(TAG, "loadAdManagerNative");
+
+        // Create AdManagerAdRequest builder
+        AdManagerAdRequest.Builder adRequestBuilder = new AdManagerAdRequest.Builder();
+
+        // Append BidMachine NativeRequest to AdManagerAdRequest
+        if (nativeRequest != null) {
+            AMBidMachineUtils.appendRequest(adRequestBuilder, nativeRequest);
+        }
+
+        // Create new AdLoader instance and load it
+        NativeListener nativeListener = new NativeListener();
+        adManagerNativeAdLoader = new AdLoader.Builder(this, NATIVE_ID)
+                .forNativeAd(nativeListener)
+                .withAdListener(nativeListener)
+                .build();
+        adManagerNativeAdLoader.loadAd(adRequestBuilder.build());
+    }
+
+    private void bidMachineNativeWin() {
+        Log.d(TAG, "bidMachineNativeWin");
+
+        // Notify BidMachine about win
+        bidMachineNativeRequest.notifyMediationWin();
+
+        // Load BidMachine ad object, before show BidMachine ad
+        loadBidMachineNative();
+    }
+
+    private void bidMachineNativeLoss() {
+        Log.d(TAG, "bidMachineNativeLoss");
+
+        // Notify BidMachine about loss
+        bidMachineNativeRequest.notifyMediationLoss();
+
+        // No need to load BidMachine ad object
+        // Show AdManager ad object
+        binding.bShowNative.setEnabled(true);
+    }
+
+    /**
+     * Method for load BidMachine NativeAd
+     */
+    private void loadBidMachineNative() {
+        Log.d(TAG, "loadBidMachineNative");
+
+        // Create NativeAd for load with previously loaded NativeRequest
+        bidMachineNativeAd = new io.bidmachine.nativead.NativeAd(this);
+        bidMachineNativeAd.setListener(new BidMachineNativeListener());
+        bidMachineNativeAd.load(bidMachineNativeRequest);
+    }
+
+    /**
+     * Method for show BidMachine NativeAd
+     */
+    private void showNative() {
+        Log.d(TAG, "showNative");
+
+        binding.bShowNative.setEnabled(false);
+
+        if (bidMachineNativeAd != null) {
+            // Check if an ad can be shown before actual impression
+            if (bidMachineNativeAd.canShow()) {
+                ItemBidmachineNativeAdBinding itemBidmachineNativeAdBinding = ItemBidmachineNativeAdBinding
+                        .inflate(getLayoutInflater(), binding.adContainer, false);
+                NativeAdContentLayout nativeAdContentLayout = itemBidmachineNativeAdBinding.nativeLayout;
+                nativeAdContentLayout.bind(bidMachineNativeAd);
+                nativeAdContentLayout.registerViewForInteraction(bidMachineNativeAd);
+
+                addAdView(itemBidmachineNativeAdBinding.getRoot());
+            } else {
+                Log.e(TAG, "Show error - BidMachine native object can't be shown");
+            }
+            return;
+        } else if (adManagerNativeAd != null) {
+            ItemAdmanagerNativeAdBinding itemAdmanagerNativeAdBinding = ItemAdmanagerNativeAdBinding
+                    .inflate(getLayoutInflater(), binding.adContainer, false);
+            NativeAdView nativeAdView = itemAdmanagerNativeAdBinding.nativeLayout;
+            nativeAdView.setHeadlineView(itemAdmanagerNativeAdBinding.tvTitle);
+            nativeAdView.setBodyView(itemAdmanagerNativeAdBinding.tvDescription);
+            nativeAdView.setCallToActionView(itemAdmanagerNativeAdBinding.bCta);
+            nativeAdView.setIconView(itemAdmanagerNativeAdBinding.ivIcon);
+            nativeAdView.setMediaView(itemAdmanagerNativeAdBinding.mediaView);
+            nativeAdView.setStarRatingView(itemAdmanagerNativeAdBinding.rbRating);
+            nativeAdView.setAdvertiserView(itemAdmanagerNativeAdBinding.providerView);
+            nativeAdView.setNativeAd(adManagerNativeAd);
+
+            addAdView(itemAdmanagerNativeAdBinding.getRoot());
+            return;
+        }
+
+        Log.e(TAG, "Can't show anything - native objects are null");
+    }
+
+    /**
+     * Method for destroy native ad
+     */
+    private void destroyNative() {
+        Log.d(TAG, "destroyNative");
+
+        if (bidMachineNativeAd != null) {
+            bidMachineNativeAd.unregisterView();
+            bidMachineNativeAd.setListener(null);
+            bidMachineNativeAd.destroy();
+            bidMachineNativeAd = null;
+        }
+        if (bidMachineNativeRequest != null) {
+            bidMachineNativeRequest.destroy();
+            bidMachineNativeRequest = null;
+        }
+        if (adManagerNativeAd != null) {
+            adManagerNativeAd.destroy();
+            adManagerNativeAd = null;
+        }
+        adManagerNativeAdLoader = null;
     }
 
 
@@ -1141,6 +1307,135 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onAdExpired(@NonNull io.bidmachine.rewarded.RewardedAd rewardedAd) {
             Log.d(TAG, "BidMachineRewardedListener - onAdExpired");
+        }
+
+    }
+
+
+    /**
+     * Class for definition behavior BidMachine NativeRequest
+     */
+    private class NativeRequestListener implements NativeRequest.AdRequestListener {
+
+        @Override
+        public void onRequestSuccess(@NonNull NativeRequest nativeRequest, @NonNull AuctionResult auctionResult) {
+            Log.d(TAG, "NativeRequestListener - onRequestSuccess");
+
+            runOnUiThread(() -> loadAdManagerNative(nativeRequest));
+        }
+
+        @Override
+        public void onRequestFailed(@NonNull NativeRequest nativeRequest, @NonNull BMError bmError) {
+            Log.d(TAG,
+                  String.format("NativeRequestListener - onRequestFailed with message: %s",
+                                bmError.getMessage()));
+
+            runOnUiThread(() -> loadAdManagerNative(null));
+        }
+
+        @Override
+        public void onRequestExpired(@NonNull NativeRequest nativeRequest) {
+            // ignore
+        }
+
+    }
+
+    /**
+     * Class for definition behavior AdManager NativeAd
+     */
+    private class NativeListener extends AdListener implements NativeAd.OnNativeAdLoadedListener {
+
+        @Override
+        public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+            // Checking whether it is BidMachine or not
+            if (AMBidMachineUtils.isBidMachineNative(nativeAd)) {
+                bidMachineNativeWin();
+            } else {
+                adManagerNativeAd = nativeAd;
+
+                bidMachineNativeLoss();
+            }
+        }
+
+        @Override
+        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+            Log.d(TAG,
+                  String.format("NativeListener - onAdFailedToLoad with message: %s",
+                                loadAdError.getMessage()));
+            Toast.makeText(MainActivity.this,
+                           "NativeFailedToLoad",
+                           Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdOpened() {
+            Log.d(TAG, "NativeListener - onAdOpened");
+        }
+
+        @Override
+        public void onAdImpression() {
+            Log.d(TAG, "NativeListener - onAdImpression");
+        }
+
+        @Override
+        public void onAdClicked() {
+            Log.d(TAG, "NativeListener - onAdClicked");
+        }
+
+        @Override
+        public void onAdClosed() {
+            Log.d(TAG, "NativeListener - onAdClosed");
+        }
+
+    }
+
+    /**
+     * Class for definition behavior BidMachine NativeAd
+     */
+    private class BidMachineNativeListener implements io.bidmachine.nativead.NativeListener {
+
+        @Override
+        public void onAdLoaded(@NonNull io.bidmachine.nativead.NativeAd nativeAd) {
+            binding.bShowNative.setEnabled(true);
+
+            Log.d(TAG, "BidMachineNativeListener - onAdLoaded");
+            Toast.makeText(MainActivity.this,
+                           "BidMachineNativeLoaded",
+                           Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdLoadFailed(@NonNull io.bidmachine.nativead.NativeAd nativeAd, @NonNull BMError bmError) {
+            Log.d(TAG,
+                  String.format("BidMachineNativeListener - onAdLoadFailed with message: %s (%s)",
+                                bmError.getCode(),
+                                bmError.getMessage()));
+            Toast.makeText(MainActivity.this,
+                           "BidMachineNativeFailedToLoad",
+                           Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdImpression(@NonNull io.bidmachine.nativead.NativeAd nativeAd) {
+            Log.d(TAG, "BidMachineNativeListener - onAdImpression");
+        }
+
+        @Override
+        public void onAdShowFailed(@NonNull io.bidmachine.nativead.NativeAd nativeAd, @NonNull BMError bmError) {
+            Log.d(TAG,
+                  String.format("BidMachineNativeListener - onAdShowFailed with message: %s (%s)",
+                                bmError.getCode(),
+                                bmError.getMessage()));
+        }
+
+        @Override
+        public void onAdClicked(@NonNull io.bidmachine.nativead.NativeAd nativeAd) {
+            Log.d(TAG, "BidMachineNativeListener - onAdClicked");
+        }
+
+        @Override
+        public void onAdExpired(@NonNull io.bidmachine.nativead.NativeAd nativeAd) {
+            Log.d(TAG, "BidMachineNativeListener - onAdExpired");
         }
 
     }
